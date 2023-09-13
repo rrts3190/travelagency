@@ -1,10 +1,13 @@
 package edu.wgu.d288_backend.config;
 
 import edu.wgu.d288_backend.entities.*;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * <h1>RestDataConfig</h1>
@@ -17,6 +20,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
  * @since 2023-02-27
  */
 @Configuration
+@EnableWebMvc
 public class RestDataConfig implements RepositoryRestConfigurer {
 
     /**
@@ -41,6 +45,18 @@ public class RestDataConfig implements RepositoryRestConfigurer {
         config.exposeIdsFor(Vacation.class);
         config.setDefaultPageSize(Integer.MAX_VALUE);
         config.setMaxPageSize(Integer.MAX_VALUE);
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer()
+    {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry)
+            {
+                registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
+            }
+        };
     }
 }
 
