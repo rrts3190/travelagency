@@ -25,12 +25,15 @@ public class CheckOutController
     @PostMapping("/checkoutByCustomer")
     public ResponseEntity<PurchaseResponse> checkoutByCustomer(@RequestBody PurchaseData purchaseData)
     {
+        logger.info("CheckOutController | checkoutByCustomer is called");
+
         PurchaseResponse purchase = checkOutService.checkout(purchaseData);
         if (purchase.getOrderTrackingNum().isEmpty())
         {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
+        logger.info("CheckOutController | checkoutByCustomer |checkout for customerId: {}, cartId: {}, tracking Number: {}"
+                , purchaseData.getCustomerId(), purchaseData.getCartId(), purchase.getOrderTrackingNum());
         return new ResponseEntity<>(purchase, HttpStatus.OK);
     }
 }
