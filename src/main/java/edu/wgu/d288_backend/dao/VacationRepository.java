@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VacationRepository extends JpaRepository<Vacation, Long>
 {
-
+    Vacation findByVacationId(long vacationId);
 }

@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ExcursionRepository extends JpaRepository<Excursion, Long>
 {
+    Excursion findByExcursionId(long excursionId);
 }

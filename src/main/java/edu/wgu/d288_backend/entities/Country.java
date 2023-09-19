@@ -1,5 +1,9 @@
 package edu.wgu.d288_backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,8 +11,10 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,19 +37,23 @@ public class Country
     @Column(name = "country_id", nullable = false)
     private long countryId;
 
-    @Column(name = "country", nullable = false)
+    @Column(name = "country")
     private String country;
 
     @CreationTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_date")
-    private Instant createDate;
+    private LocalDateTime  createDate;
 
     @UpdateTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "last_update")
-    private Instant lastUpdate;
+    private LocalDateTime   lastUpdate;
 
-    @OneToMany(mappedBy ="countryForeign")
+    @OneToMany(mappedBy ="countryForeign", orphanRemoval = true,
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    @JsonManagedReference(value="country-movement")
     private List<Division> divisions;
-
 
 }

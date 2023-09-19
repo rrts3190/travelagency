@@ -1,5 +1,8 @@
 package edu.wgu.d288_backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +47,6 @@ public class Carts
     private String orderTrackNum;
 
     @Column(name = "package_price", precision = 19, scale = 2)
-    @Type(type = "big_decimal")
     private double pkgPrice;
 
     @Enumerated(EnumType.STRING)
@@ -53,17 +55,21 @@ public class Carts
 
 
     @CreationTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_date")
-    private Instant createDate;
+    private LocalDateTime  createDate;
 
     @UpdateTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "last_update")
-    private Instant lastUpdate;
+    private LocalDateTime   lastUpdate;
 
     @ManyToOne
     @JoinColumn(name = "customer_Id")
+    @JsonBackReference(value="cart-movement")
     private Customer cartsForeign;
 
     @OneToMany(mappedBy ="cartItemsForeign")
-    private Set<CartItems> cartItemsForeign;
+    @JsonManagedReference(value="cartItem-movement")
+    private Set<CartItems> cartItemsSet;
 }

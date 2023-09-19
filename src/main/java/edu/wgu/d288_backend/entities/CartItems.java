@@ -1,5 +1,8 @@
 package edu.wgu.d288_backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,26 +41,49 @@ public class CartItems
     private long cartItemId;
 
     @CreationTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_date")
-    private Instant createDate;
+    private LocalDateTime  createDate;
 
     @UpdateTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "last_update")
-    private Instant lastUpdate;
+    private LocalDateTime   lastUpdate;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonBackReference(value="cartItem-movement")
     private Carts cartItemsForeign;
 
     @ManyToOne
+    @JsonBackReference(value="vacation-movement")
     @JoinColumn(name = "vacation_id")
     private Vacation vacationForeign;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
             name = "excursion_cartitem",
             joinColumns = { @JoinColumn(name = "cart_item_id") },
             inverseJoinColumns = { @JoinColumn(name = "excursion_id") }
     )
-    Set<Excursion> excursions = new HashSet<>();
+    private Set<Excursion> excursions = new HashSet<>();
+
+    public void addExcursion(Excursion excursion)
+    {
+        this.excursions.add(excursion);
+        excursion.getCartItems().add(this);
+    }
+
+    public void removeExcursion(long excursionId) {
+        Excursion excursion = this.excursions.stream()
+                .filter(t -> t.getExcursionId() == excursionId).findFirst().orElse(null);
+        if (excursion != null) {
+            this.excursions.remove(excursion);
+            excursion.getCartItems().remove(this);
+        }
+    }
 }

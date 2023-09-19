@@ -1,6 +1,10 @@
 package edu.wgu.d288_backend.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +13,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +27,7 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -36,15 +43,16 @@ public class Excursion {
     private long excursionId;
 
     @CreationTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_date")
-    private Instant createDate;
+    private LocalDateTime  createDate;
 
     @UpdateTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "last_update")
-    private Instant lastUpdate;
+    private LocalDateTime   lastUpdate;
 
     @Column(name = "excursion_price", precision = 19, scale = 2)
-    @Type(type = "big_decimal")
     private double excursionPrice;
 
     @Column(name = "image_url")
@@ -55,9 +63,15 @@ public class Excursion {
 
     @ManyToOne
     @JoinColumn(name = "vacation_id")
+    @JsonBackReference(value="excursion-movement")
     private Vacation excursionsForeign;
 
-    @ManyToMany(mappedBy = "excursions")
-    private Set<CartItems> excursions;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },mappedBy = "excursions")
+    @JsonIgnore
+    private Set<CartItems> cartItems = new HashSet<>();;
 
 }

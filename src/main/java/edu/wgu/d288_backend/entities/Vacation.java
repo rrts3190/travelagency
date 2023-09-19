@@ -1,5 +1,7 @@
 package edu.wgu.d288_backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,12 +36,14 @@ public class Vacation
     private long vacationId;
 
     @CreationTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_date")
-    private Instant createDate;
+    private LocalDateTime  createDate;
 
     @UpdateTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "last_update")
-    private Instant lastUpdate;
+    private LocalDateTime   lastUpdate;
 
     @Column(name = "description")
     private String description;
@@ -51,11 +55,14 @@ public class Vacation
     private String imageUrl;
 
     @Column(name = "travel_fare_price", precision = 19, scale = 2)
-    @Type(type = "big_decimal")
     private double farePrice;
 
-
     @OneToMany(mappedBy ="excursionsForeign")
+    @JsonManagedReference(value="excursion-movement")
     private Set<Excursion> excursions;
+
+    @OneToMany(mappedBy ="vacationForeign")
+    @JsonManagedReference(value="vacation-movement")
+    private Set<CartItems> cartItems;
 
 }
