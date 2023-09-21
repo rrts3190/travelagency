@@ -3,6 +3,7 @@ package edu.wgu.d288_backend.controller;
 import edu.wgu.d288_backend.entities.Country;
 import edu.wgu.d288_backend.entities.Customer;
 import edu.wgu.d288_backend.entities.Division;
+import edu.wgu.d288_backend.services.CountryImpl;
 import edu.wgu.d288_backend.services.CustomerImpl;
 import edu.wgu.d288_backend.services.DivisionImpl;
 import org.slf4j.Logger;
@@ -25,6 +26,9 @@ public class DivisionController
 {
     @Autowired
     private DivisionImpl divisionService;
+
+    @Autowired
+            private CountryImpl countryService;
     Logger logger = LoggerFactory.getLogger(DivisionController.class);
 
     @GetMapping("/allDivision")
@@ -38,10 +42,11 @@ public class DivisionController
         return ResponseEntity.ok(divisionService.getDivisionById(divisionId));
     }
 
-    @PostMapping("/addDivision")
-    public ResponseEntity<Division> addDivision(@RequestBody Division division)
+    @PostMapping("/{countryId}/addDivision")
+    public ResponseEntity<Division> addDivision(@PathVariable("countryId") long countryId, @RequestBody Division division)
     {
-
+        Country country = countryService.getCountryById(countryId);
+        division.setCountryForeign(country);
         return new ResponseEntity<>(divisionService.saveDivision(division), HttpStatus.CREATED);
     }
 }

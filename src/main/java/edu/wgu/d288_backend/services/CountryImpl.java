@@ -29,4 +29,9 @@ public class CountryImpl implements ICountry{
     {
         return countryRepository.findAll();
     }
+
+    @Override
+    public Country getCountryById(long countryId) {
+        return countryRepository.findById(countryId).get();
+    }
 }

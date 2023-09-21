@@ -11,4 +11,6 @@ public interface ICountry
     Country addCountry(Country country);
 
     List<Country> getAllCountry();
+
+    Country getCountryById(long countryId);
 }
