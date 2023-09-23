@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -57,9 +58,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    protected ResponseEntity<ApiResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+    protected ResponseEntity<ApiResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex)
+    {
+        String msg = ex.getCause().getMessage();
+        if (ex.getCause() != null && ex.getCause() instanceof InvalidFormatException
+                && msg.contains("values accepted for Enum class: [canceled, ordered, pending]"))
+        {
+            msg = "Cart status should be canceled, ordered or pending";
+        }
         ApiResponse response = ApiResponse.builder()
-                .message(Objects.requireNonNull(ex.getMessage()).contains("Enum class: [canceled, ordered, pending]") ? "Cart status should be canceled, ordered or pending" : ex.getMessage())
+                .message(msg)
                 .success(false)
                 .status(HttpStatus.BAD_REQUEST)
                 .build();

@@ -3,6 +3,7 @@ package edu.wgu.d288_backend.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import edu.wgu.d288_backend.exception.ValidEnumValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,6 +54,7 @@ public class Carts
     private double pkgPrice;
 
     @Enumerated(EnumType.STRING)
+    @ValidEnumValue(enumClass = StatusType.class, message = "Invalid statusType value")
     @Column(name = "status")
     private StatusType status;
 
