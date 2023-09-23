@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/cart")
 public class CartController
@@ -37,7 +39,7 @@ public class CartController
     }
 
     @PostMapping("/{customerId}/addCart")
-    public ResponseEntity<Carts> addCart(@PathVariable long customerId, @RequestBody Carts carts)
+    public ResponseEntity<Carts> addCart(@PathVariable long customerId, @Valid  @RequestBody Carts carts)
     {
         Customer customer = customerService.getCustomerById(customerId);
         carts.setCartsForeign(customer);

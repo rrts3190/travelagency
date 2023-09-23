@@ -21,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -42,20 +43,23 @@ public class Customer
     private long customerId;
 
     @Column(name = "customer_first_name")
+    @Pattern(regexp="^[A-Za-z ]*$",message = "The first name should contain only alphabetic characters")
     private String firstName;
 
     @Column(name = "customer_last_name")
+    @Pattern(regexp="^[A-Za-z ]*$",message = "The last name should contain only alphabetic characters")
     private String lastName;
 
     @Column(name = "phone")
+    @Pattern(regexp="(^$|[0-9]{10})", message = "The phone number should consist only of numeric characters, and its length should be 10 digits")
     private String phone;
 
     @Column(name = "postal_code")
+    @Pattern(regexp="(^$|[0-9]{6})", message = "The postal code should consist only of numeric characters, and its length should be 6 digits")
     private String postalCode;
 
     @Column(name = "address")
     private String address;
-
 
     @CreationTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

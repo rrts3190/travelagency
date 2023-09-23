@@ -17,6 +17,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -46,15 +48,20 @@ public class Vacation
     private LocalDateTime   lastUpdate;
 
     @Column(name = "description")
+    @Pattern(regexp="^[.a-zA-Z0-9 ]+$",message = "The description should contain only alphanumeric value")
     private String description;
 
     @Column(name = "vacation_title")
+    @Pattern(regexp="^[A-Za-z ]*$",message = "The vacation title should contain only alphabetic characters")
     private String vacationTitle;
 
     @Column(name = "image_url")
+    @Pattern(regexp= "((http|https)://)(www.)?[a-zA-Z0-9@:%._+~#?&/=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._+~#?&/=]*)",
+            message = "Please pass valid image url")
     private String imageUrl;
 
     @Column(name = "travel_fare_price", precision = 19, scale = 2)
+    @DecimalMin(value = "0.1", message = "Please Enter valid fare price(fare price > 0)")
     private double farePrice;
 
     @OneToMany(mappedBy ="excursionsForeign")

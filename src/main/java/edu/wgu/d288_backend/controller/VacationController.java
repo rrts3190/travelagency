@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/vacation")
 public class VacationController
@@ -29,7 +31,7 @@ public class VacationController
     }
 
     @PostMapping("/addVacation")
-    public ResponseEntity<Vacation> addVacation(@RequestBody Vacation vacation)
+    public ResponseEntity<Vacation> addVacation(@Valid @RequestBody Vacation vacation)
     {
         return new ResponseEntity<>(vacationService.saveVacation(vacation), HttpStatus.CREATED);
     }

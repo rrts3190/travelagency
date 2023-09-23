@@ -24,6 +24,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -53,12 +55,16 @@ public class Excursion {
     private LocalDateTime   lastUpdate;
 
     @Column(name = "excursion_price", precision = 19, scale = 2)
+    @DecimalMin(value = "0.1", message = "Please Enter valid Excursion price(Excursion price > 0)")
     private double excursionPrice;
 
     @Column(name = "image_url")
+    @Pattern(regexp= "((http|https)://)(www.)?[a-zA-Z0-9@:%._+~#?&/=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._+~#?&/=]*)",
+            message = "Please pass valid image url")
     private String imageUrl;
 
     @Column(name = "excursion_title")
+    @Pattern(regexp="^[A-Za-z ]*$",message = "The excursion title should contain only alphabetic characters")
     private String excursionTitle;
 
     @ManyToOne

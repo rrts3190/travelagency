@@ -23,6 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -44,6 +45,7 @@ public class Division
     private long divisionId;
 
     @Column(name = "division")
+    @Pattern(regexp="^[A-Za-z ]*$",message = "The division should contain only alphabetic characters")
     private String division;
 
     @CreationTimestamp

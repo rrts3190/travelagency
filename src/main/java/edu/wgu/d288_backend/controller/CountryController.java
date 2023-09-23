@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -38,7 +39,7 @@ public class CountryController
     }
 
     @PostMapping("/addCountry")
-    public ResponseEntity<Country> addCountry(@RequestBody Country country)
+    public ResponseEntity<Country> addCountry(@Valid  @RequestBody Country country)
     {
 
         return new ResponseEntity<>(countryService.addCountry(country), HttpStatus.CREATED);

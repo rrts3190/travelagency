@@ -20,6 +20,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,6 +39,7 @@ public class Country
     private long countryId;
 
     @Column(name = "country")
+    @Pattern(regexp="^[.A-Za-z ]*$",message = "The country should contain only alphabetic characters")
     private String country;
 
     @CreationTimestamp

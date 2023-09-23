@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,7 +46,7 @@ public class ExcursionController
     @PostMapping("/{cartItemIds}/{vacationId}/addExcursion")
     public ResponseEntity<Excursion> addExcursion(@PathVariable long vacationId,
                                                   @PathVariable List<Long> cartItemIds,
-                                                 @RequestBody Excursion excursion)
+                                                  @Valid @RequestBody Excursion excursion)
     {
         Vacation vacation = vacationService.getVacationById(vacationId);
         excursion.setExcursionsForeign(vacation);

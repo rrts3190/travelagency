@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
@@ -22,8 +21,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.sql.Timestamp;
-import java.time.Instant;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -40,13 +40,16 @@ public class Carts
     @Column(name = "cart_Id", nullable = false)
     private long cartId;
 
-    @Column(name = "party_size", nullable = false)
+    @Column(name = "party_size")
+    @Max(value = 4, message = "The partySize should be less than 9999")
     private int partySize;
 
     @Column(name = "order_tracking_number")
+    @Pattern(regexp="^[a-zA-Z0-9 ]+$",message = "The order tracking number should contain only alphanumeric value")
     private String orderTrackNum;
 
     @Column(name = "package_price", precision = 19, scale = 2)
+    @DecimalMin(value = "0.1", message = "Please Enter valid package price(package price > 0)")
     private double pkgPrice;
 
     @Enumerated(EnumType.STRING)

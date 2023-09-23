@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -43,7 +44,7 @@ public class DivisionController
     }
 
     @PostMapping("/{countryId}/addDivision")
-    public ResponseEntity<Division> addDivision(@PathVariable("countryId") long countryId, @RequestBody Division division)
+    public ResponseEntity<Division> addDivision(@PathVariable("countryId") long countryId, @Valid @RequestBody Division division)
     {
         Country country = countryService.getCountryById(countryId);
         division.setCountryForeign(country);
